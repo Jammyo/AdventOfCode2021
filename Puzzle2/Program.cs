@@ -4,37 +4,33 @@ using System.Linq;
 using System.Threading.Tasks;
 using Shared;
 
-namespace PuzzleTwo
+namespace Puzzle2
 {
     class Program
     {
         static async Task Main()
         {
-            var cookie = AdventOfCode.GetCookie();
-            var input = await AdventOfCode.GetInput(cookie, 1);
-            var increases = CalculateIncreases(input);
+            var input = await AdventOfCode.GetInput(1);
+            var inputs = AdventOfCode.ParseInput<int>(input);
+            
+            // Transform to a new list to gain access to GetRange().
+            var increases = CalculateIncreases(inputs.ToList());
             
             Console.WriteLine($"Increases: {increases}");
         }
 
         const int Groupings = 3;
         
-        static int CalculateIncreases(string input)
+        static int CalculateIncreases(List<int> inputs)
         {
-            //Clean and convert input.
-            var inputs = input.Split('\n')
-                .Where(s => !string.IsNullOrWhiteSpace(s))
-                .Select(int.Parse)
-                .ToList();
-
-            //Apply the window and get the sum of each group.
+            // Apply the window and get the sum of each group.
             var windowedInputs = new List<int>();
             for (var i = 0; i + Groupings <= inputs.Count; ++i)
             {
                 windowedInputs.Add(inputs.GetRange(i, Groupings).Sum());
             }
             
-            //Count each occurence where the depth increases within the window.
+            // Count each occurence where the depth increases within the window.
             var result = windowedInputs
                 .Aggregate((count: 0, previous: int.MaxValue), (tuple, current) =>
                 {
