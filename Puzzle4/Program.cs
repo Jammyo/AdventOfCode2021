@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Shared;
 
-namespace Puzzle3
+namespace Puzzle4
 {
     class Program
     {
@@ -17,11 +16,12 @@ namespace Puzzle3
             Console.WriteLine($"Position: {position}, Depth: {depth}");
             Console.WriteLine($"Position * Depth = {position * depth}");
         }
-        
+
         static (int position, int depth) CalculateCourse(IReadOnlyList<Command> commands)
         {
             var position = 0;
             var depth = 0;
+            var aim = 0;
             
             foreach (var command in commands)
             {
@@ -29,18 +29,19 @@ namespace Puzzle3
                 {
                     case Direction.Forward:
                         position += command.Value;
+                        depth += aim * command.Value;
                         break;
                     case Direction.Up:
-                        depth -= command.Value;
+                        aim -= command.Value;
                         break;
                     case Direction.Down:
-                        depth += command.Value;
+                        aim += command.Value;
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(command), $"{command}");
                 }
             }
-
+            
             return (position, depth);
         }
     }
