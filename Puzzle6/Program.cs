@@ -25,17 +25,15 @@ namespace Puzzle6
                 .Where(s => !string.IsNullOrWhiteSpace(s))
 
                 // Handy rotation snippet from: https://stackoverflow.com/questions/39484996/rotate-transposing-a-listliststring-using-linq-c-sharp 
-                .SelectMany(s => s.Select((digit, index) => (digit, index)))
-                .GroupBy(tuple => tuple.index, tuple => tuple.digit)
-                .Select(digits => digits.ToList())
+                .SelectMany(s => s.Select((digit, columnIndex) => (digit, columnIndex)))
+                .GroupBy(tuple => tuple.columnIndex, tuple => tuple.digit)
+                .Select(columns => columns.ToList())
+                .Select(column => column.Select((cell, rowIndex) => (cell, rowIndex)).ToList())
                 .ToList();
-
-            // Create an index for each row.
-            var indices = columns.First().Select((_, index) => index).ToList();
             
             //Get the index for each rating type.
-            var oxygenIndex = GetRatingIndex(columns, indices, BitCriteria.Oxygen);
-            var co2Index = GetRatingIndex(columns, indices, BitCriteria.Co2);
+            var oxygenIndex = GetRatingIndex(columns, BitCriteria.Oxygen);
+            var co2Index = GetRatingIndex(columns, BitCriteria.Co2);
 
             var oxygen = ConvertIndexToRating(oxygenIndex, columns);
             var co2 = ConvertIndexToRating(co2Index, columns);
@@ -43,29 +41,34 @@ namespace Puzzle6
             return (oxygen, co2);
         }
 
-        private static int ConvertIndexToRating(int index, List<List<char>> columns)
+        private static int ConvertIndexToRating(int index, List<List<(char cell, int rowIndex)>> columns)
         {
-            var rating = string.Join("", columns.Select(rows => rows[index]));
+            var rating = string.Join("", columns.Select(rows => rows[index].cell));
             return Convert.ToInt32(rating, 2);
         }
 
-        private static int GetRatingIndex(List<List<char>> columns, List<int> indices, BitCriteria bitCriteria)
+        private static int GetRatingIndex(List<List<(char cell, int rowIndex)>> columns, BitCriteria bitCriteria)
         {
-            var resultingIndices = columns.Aggregate(indices, (remainingIndices, column) =>
+            var seedIndices = columns.First().Select(tuple => tuple.rowIndex).ToList();
+            var resultingIndices = columns.Aggregate(seedIndices, (remainingRows, column) =>
             {
-                if (remainingIndices.Count == 1)
+                if (remainingRows.Count == 1)
                 {
                     // We've found the answer, return early.
-                    return remainingIndices;
+                    return remainingRows;
                 }
 
-                var zeroes = column.Count(c => c.Equals('0'));
-                var ones = column.Count(c => c.Equals('1'));
-                var mostCommonBit = EstablishMostCommonBitFromCriteria(bitCriteria, ones, zeroes);
-                return column.Select((c, index) => (c, index))
-                    .Where(tuple => tuple.c.Equals(mostCommonBit))
-                    .Select(tuple => tuple.index)
-                    .Where(remainingIndices.Contains)
+                // Filter out rows which have been eliminated by a previous iteration.
+                var filteredColumn = column.Where(tuple => remainingRows.Contains(tuple.rowIndex)).ToList();
+
+                // Calculate the most common bit.
+                var zeroes = filteredColumn.Count(row => row.cell.Equals('0'));
+                var ones = filteredColumn.Count(row => row.cell.Equals('1'));
+                var criteriaBit = EstablishBitFromCriteria(bitCriteria, ones, zeroes);
+                
+                // Filter out the relevant bit.
+                return filteredColumn.Where(row => row.cell.Equals(criteriaBit))
+                    .Select(row => row.rowIndex)
                     .ToList();
             });
             if (resultingIndices.Count != 1)
@@ -76,12 +79,12 @@ namespace Puzzle6
             return resultingIndices.First();
         }
 
-        private static char EstablishMostCommonBitFromCriteria(BitCriteria bitCriteria, int ones, int zeroes)
+        private static char EstablishBitFromCriteria(BitCriteria bitCriteria, int ones, int zeroes)
         {
             return bitCriteria switch
             {
-                BitCriteria.Oxygen => ones >= zeroes ? '1' : '0', // Oxygen prefers 1's.
-                BitCriteria.Co2 => zeroes >= ones ? '0' : '1', // Co2 prefers 0's.
+                BitCriteria.Oxygen => ones >= zeroes ? '1' : '0', // Oxygen prefers most and 1's.
+                BitCriteria.Co2 => zeroes <= ones ? '0' : '1', // Co2 prefers least and 0's.
                 _ => throw new ArgumentOutOfRangeException(nameof(bitCriteria), bitCriteria, null)
             };
         }
