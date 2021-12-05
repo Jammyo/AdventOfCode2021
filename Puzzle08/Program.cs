@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Shared;
 using Shared.Bingo;
 
-namespace Puzzle8
+namespace Puzzle08
 {
     class Program
     {

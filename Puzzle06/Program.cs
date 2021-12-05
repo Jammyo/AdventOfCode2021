@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Shared;
 
-namespace Puzzle6
+namespace Puzzle06
 {
     class Program
     {

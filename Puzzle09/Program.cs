@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Shared;
 
-namespace Puzzle9
+namespace Puzzle09
 {
     class Program
     {
