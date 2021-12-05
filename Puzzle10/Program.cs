@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using Shared;
 using Shared.HydrothermalVents;
 
-namespace Puzzle09
+namespace Puzzle10
 {
     class Program
     {
@@ -23,8 +22,7 @@ namespace Puzzle09
 
         private static int CalculatePointsWithMultipleOverlaps(IReadOnlyList<VentLine> ventLines)
         {
-            var nonDiagonalVentLines = ventLines.Where(line => line.From.X.Equals(line.To.X) || line.From.Y.Equals(line.To.Y)).ToList();
-            var gridPoints = VentLines.BuildGrid(nonDiagonalVentLines);
+            var gridPoints = VentLines.BuildGrid(ventLines);
 
             return gridPoints.SelectMany(pair => pair.Value)
                 .Select(pair => pair.Value)
