@@ -24,6 +24,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Puzzle10", "Puzzle10\Puzzle
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Puzzle11", "Puzzle11\Puzzle11.csproj", "{809120CE-4355-4643-8289-CC1708E77605}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Puzzle12", "Puzzle12\Puzzle12.csproj", "{DD1124C4-1FF0-4960-B270-98C09060CE3C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -78,5 +80,9 @@ Global
 		{809120CE-4355-4643-8289-CC1708E77605}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{809120CE-4355-4643-8289-CC1708E77605}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{809120CE-4355-4643-8289-CC1708E77605}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD1124C4-1FF0-4960-B270-98C09060CE3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD1124C4-1FF0-4960-B270-98C09060CE3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD1124C4-1FF0-4960-B270-98C09060CE3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD1124C4-1FF0-4960-B270-98C09060CE3C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Shared;
 using Shared.LanternFish;
 
-namespace Puzzle11
+namespace Puzzle12
 {
     class Program
     {
@@ -15,7 +13,7 @@ namespace Puzzle11
 
             var initialFish = LanternFish.ParseInput(input);
 
-            var finalFish = LanternFish.CountFishAfterDays(initialFish, 80);
+            var finalFish = LanternFish.CountFishAfterDays(initialFish, 256);
             
             Console.WriteLine($"Lantern fish: {finalFish}.");
         }
