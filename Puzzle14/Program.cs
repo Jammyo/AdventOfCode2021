@@ -30,7 +30,7 @@ namespace Puzzle14
         
         private static int CalculateFuelNeededToLineUp(IReadOnlyList<int> positions)
         {
-            return Enumerable.Range(0, positions.Max())
+            return Enumerable.Range(positions.Min(), positions.Max())
                 .Select(position => CalculateFuelNeededToLineUp(position, positions))
                 .Min();
         }
