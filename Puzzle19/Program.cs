@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Shared;
+using Shared.Syntax;
 
 namespace Puzzle19
 {
@@ -12,7 +13,7 @@ namespace Puzzle19
         {
             var input = await AdventOfCode.GetInput(10);
 
-            var linesOfCode = ParseInput(input);
+            var linesOfCode = Syntax.ParseInput(input);
 
             var illegalCharacters = FindIllegalCharacters(linesOfCode);
             var illegalCharacterScore = ScoreIllegalCharacters(illegalCharacters);
@@ -20,88 +21,15 @@ namespace Puzzle19
             Console.WriteLine($"Illegal character score {illegalCharacterScore}.");
         }
 
-        private static IReadOnlyList<IReadOnlyList<char>> ParseInput(string input)
-        {
-            return input
-                .Split('\n')
-                .Where(s => !string.IsNullOrEmpty(s))
-                .Select(s => s.ToCharArray())
-                .ToList();
-        }
-
         private static IReadOnlyList<char> FindIllegalCharacters(IReadOnlyList<IReadOnlyList<char>> linesOfCode)
         {
-            var illegalCharacters = new List<char>();
-            
-            foreach (var line in linesOfCode)
-            {
-                var firstIllegalCharacter = FindFirstIllegalCharacter(line);
-                if (firstIllegalCharacter != null)
-                {
-                    illegalCharacters.Add(firstIllegalCharacter.Value);
-                }
-            }
-
-            return illegalCharacters;
+            return linesOfCode
+                .Select(Syntax.FindFirstIllegalCharacter)
+                .Where(firstIllegalCharacter => firstIllegalCharacter != null)
+                .Select(firstIllegalCharacter => firstIllegalCharacter.Value)
+                .ToList();
         }
-
-        private static char? FindFirstIllegalCharacter(IReadOnlyList<char> line)
-        {
-            var stack = new Stack<char>();
-            foreach (var c in line)
-            {
-                switch (c)
-                {
-                    case '(':
-                        stack.Push('(');
-                        break;
-                    case '{':
-                        stack.Push('{');
-                        break;
-                    case '[':
-                        stack.Push('[');
-                        break;
-                    case '<':
-                        stack.Push('<');
-                        break;
-                    case ')':
-                    {
-                        if(!stack.TryPop(out var previousCharacter) || !previousCharacter.Equals('('))
-                        {
-                            return c;
-                        }
-                        break;
-                    }
-                    case '}':
-                    {
-                        if (!stack.TryPop(out var previousCharacter) || !previousCharacter.Equals('{'))
-                        {
-                            return c;
-                        }
-                        break;
-                    }
-                    case ']':
-                    {
-                        if (!stack.TryPop(out var previousCharacter) || !previousCharacter.Equals('['))
-                        {
-                            return c;
-                        }
-                        break;
-                    }
-                    case '>':
-                    {
-                        if (!stack.TryPop(out var previousCharacter) || !previousCharacter.Equals('<'))
-                        {
-                            return c;
-                        }
-                        break;
-                    }
-                }
-            }
-
-            return null;
-        }
-
+        
         private static int ScoreIllegalCharacters(IReadOnlyList<char> illegalCharacters)
         {
             var points = new Dictionary<char, int>
