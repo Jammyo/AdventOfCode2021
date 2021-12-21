@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Linq;
-using System.Numerics;
 using System.Threading.Tasks;
 using Shared;
 using Shared.Probe;
 
-namespace Puzzle33
+namespace Puzzle34
 {
     class Program
     {
@@ -15,9 +13,9 @@ namespace Puzzle33
 
             var targetArea = Probe.ParseInput(input);
 
-            var highestYPosition = Probe.CalculateHighestYPosition(targetArea);
+            var validInitialVelocities = Probe.CountValidInitialVelocities(targetArea);
 
-            Console.WriteLine($"Highest y position {highestYPosition}.");
+            Console.WriteLine($"Valid initial velocities {validInitialVelocities}.");
         }
     }
 }
